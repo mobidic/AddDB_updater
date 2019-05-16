@@ -2,6 +2,9 @@
 
 # AddDB Updater
 
+## Remove previous file
+rm -f data/*
+
 ## Download databases
 
 ### HGNC HUGO gene name (approved symbol and approved name)
