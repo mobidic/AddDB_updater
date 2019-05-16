@@ -30,6 +30,11 @@ Orphanet
 GeneVisible
 
 
+
+uniprot column names for API:
+https://www.uniprot.org/help/uniprotkb_column_names
+
+
 uniprot customize columns:
 
 https://www.uniprot.org/uniprot/?query=*&fil=reviewed%3Ayes+AND+organism%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22#customize-columns
