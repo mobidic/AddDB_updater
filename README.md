@@ -1,6 +1,13 @@
 # AddDB_updater
 Script to update external cross reference database into a single file 
 
+# Run 
+
+To make it work, git clone this repository and do 
+
+```bash
+sh updater.sh
+```
 
 ## Required Input Databases:
 #Gene_name  
