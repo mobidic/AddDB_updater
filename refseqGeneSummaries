@@ -32,7 +32,7 @@ et les fins de lignes
 
 Je l'ai fait dans VIM la main: essayer d'automatiser pour la prochaine fois
 
-quelques genes ont une virgule derri√re eux et quelques lignes sont doublonn√es pour des questions de variants.
+quelques genes ont une virgule derri√Ére eux et quelques lignes sont doublonn√Ées pour des questions de variants.
 %s/,\t/\t/
 
 
