@@ -27,11 +27,15 @@ GenAtlas
 MIM  
 Orphanet  
 GeneVisible  
-
-
-
+  
+  
+wget 'https://www.uniprot.org/uniprot/?query=&fil=organism:9606+AND+reviewed:yes&columns=id,reviewed,protein names,genes,comment(FUNCTION),comment(TISSUE SPECIFICITY),comment(INVOLVEMENT IN DISEASE)&format=tab&compress=no'  
+  
 uniprot column names for API:
 https://www.uniprot.org/help/uniprotkb_column_names  
+
+
+
 
 
 uniprot customize columns:  
