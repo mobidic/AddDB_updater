@@ -1,5 +1,7 @@
-# AddDB_updater
+# AddDB updater
 Script to update external cross reference database into a single file 
+
+This is a script that can download cross referenced databases, parse them and create a unique fully annotated tsv file to replace gene_xref (i.e. for ANNOVAR). This script could be useful to update these databases and be added to the [Achabilarity](https://github.com/mobidic/Achabilarity) container (custom_database.txt).
 
 # Run 
 
@@ -9,42 +11,32 @@ To make it work, git clone this repository and do
 sh updater.sh
 ```
 
-## Required Input Databases:
-#Gene_name  
-pLi	pRec	pNull z-score missense LOEUF gnomad https://storage.googleapis.com/gnomad-public/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz     
-Gene_full_name	<= cf uniprot   
-Function_description <= refseq summary UCSC	<= cf uniprot   
-Disease_description	<= cf uniprot   
-Tissue_specificity(Uniprot)	<= cf uniprot   
-Expression(egenetics)	<= not found   
-Expression(GNF/Atlas)	<= not found   
-Phenotypes	<= genemap2   
-HPO <= clinsyn.Json  + others genes ?   
+# Databases included
 
+- HGNC Approved Gene Name
+- GnomAD constraint score (oe for LoF, missense and synonymous variants with confidence interval)
+- UniProt database (gene function, tissue specificity, involvment in disease)
+- OMIM (phenotype columns of genemap2)
 
-## Sources:
-uniprot query  
-https://www.uniprot.org/uniprot/?query=&fil=organism%3A%22Homo%20sapiens%20(Human)%20%5B9606%5D%22%20AND%20reviewed%3Ayes&columns=id%2Creviewed%2Cprotein%20names%2Cgenes%2Ccomment(FUNCTION)%2Ccomment(TISSUE%20SPECIFICITY)%2Ccomment(INVOLVEMENT%20IN%20DISEASE)  
+NB: For OMIM database, you need to ask for access and replace the link for genemap2.txt in the updater.sh
 
-VIA https://www.uniprot.org/database/?query=*&fil=&columns=id  
-ExpressionAtlas   
-GeneReviews  
-GeneCards  
-GenAtlas  
-MIM  
-Orphanet  
-GeneVisible  
-  
-  
-wget 'https://www.uniprot.org/uniprot/?query=&fil=organism:9606+AND+reviewed:yes&columns=id,reviewed,protein names,genes,comment(FUNCTION),comment(TISSUE SPECIFICITY),comment(INVOLVEMENT IN DISEASE)&format=tab&compress=no'  
-  
-uniprot column names for API:
-https://www.uniprot.org/help/uniprotkb_column_names  
+# Documentation
+
+A Jupyter Notebook to explain who this script work is available in this repository [AddDB_updater.ipynb](https://github.com/mobidic/AddDB_updater/blob/master/AddDB_updater.ipynb)
+
+-------------------------------------------------------------------------------
+
+**Montpellier Bioinformatique pour le Diagnostique Clinique (MoBiDiC)**
+
+*CHU de Montpellier*
+
+France
+
+![MoBiDiC](https://raw.githubusercontent.com/mobidic/MPA/master/doc/img/logo-mobidic.png)
+
+[Visit our website](https://neuro-2.iurc.montp.inserm.fr/mobidic/)
 
 
 
 
-
-uniprot customize columns:  
-
-https://www.uniprot.org/uniprot/?query=*&fil=reviewed%3Ayes+AND+organism%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22#customize-columns  
+ 
