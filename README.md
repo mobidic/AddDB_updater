@@ -1,5 +1,4 @@
 # AddDB updater
-Script to update external cross reference database into a single file 
 
 This is a script that can download cross referenced databases, parse them and create a unique fully annotated tsv file to replace gene_xref (i.e. for ANNOVAR). This script could be useful to update these databases and be added to the [Achabilarity](https://github.com/mobidic/Achabilarity) container (custom_database.txt).
 
@@ -10,6 +9,12 @@ To make it work, git clone this repository and do
 ```bash
 sh updater.sh
 ```
+
+## Requirements
+
+- python (3.6 tested)
+- pandas library
+
 
 ## Databases included
 
