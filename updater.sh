@@ -2,8 +2,18 @@
 
 # AddDB Updater
 
-## Remove previous file
-rm -f data/*
+## Check if data folder exists and remove previous file
+
+if [ ! -d data/ ]
+then 
+	mkdir data
+fi 
+
+rm -f data/hgnc.tsv
+rm -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt
+rm -f data/uniprot.tsv
+rm -f data/genemap2.txt
+rm -f data/gene_fullxref.txt
 
 ## Download databases
 
