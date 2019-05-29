@@ -115,10 +115,13 @@ def merge_db(hgnc_file,omim_file,gnomad_score_file,uniprot_file):
 today = datetime.date.today()
 filename = 'data/gene_fullxref_'
 filename += str(today)
-filename += '_.txt'
+filename += '.txt'
 
 gene_fullxref_list = merge_db(hgnc_file,omim_file, gnomad_score_file, uniprot_file)
 gene_fullxref_list = gene_fullxref_list.replace('\+','plus',regex=True)
 gene_fullxref_list.loc[:,['Approved name','Phenotypes','Function [CC]','Involvement in disease','Tissue specificity']] = gene_fullxref_list.loc[:,['Approved name','Phenotypes','Function [CC]','Involvement in disease','Tissue specificity']].replace('-','_',regex=True)
+gene_fullxref_list.loc[:,['Phenotypes']] = gene_fullxref_list.loc[:,['Phenotypes']].replace('\(','_',regex=True)
+gene_fullxref_list.loc[:,['Phenotypes']] = gene_fullxref_list.loc[:,['Phenotypes']].replace('\)','_',regex=True)
+gene_fullxref_list.columns = gene_fullxref_list.columns.str.replace(' ','_')
 gene_fullxref_list.to_csv(filename,sep='\t',index=False)
 
