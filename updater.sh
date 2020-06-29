@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ "$#" -ne 1 ]; then
+ echo "Missing argument: you should give your personal URL to download OMIM genemap2 file, provided from https://www.omim.org/downloads/  \n"
+ echo "usage: updater.sh  https://data.omim.org/downloads/my-Registration-Code/genemap2.txt  \n"
+ exit 1
+fi
+
+
+
 # AddDB Updater
 
 ## Check if data folder exists and remove previous file
@@ -27,8 +35,8 @@ gunzip data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz
 ### UniProt data
 wget -O data/uniprot.tsv 'https://www.uniprot.org/uniprot/?query=&fil=organism:9606+AND+reviewed:yes&columns=id,reviewed,protein names,genes(PREFERRED),comment(FUNCTION),comment(TISSUE SPECIFICITY),comment(DISEASE)&format=tab&compress=no'
 
-### OMIM genemap2 according to your personnal Data Account Registration
-wget -P data 'https://data.omim.org/downloads/FLmRA_-rRN2mSCUPfnabqg/genemap2.txt'
+### URL to get OMIM genemap2 according to your personnal Data Account Registration
+wget -P data $1 
 
 ## Merge data into 
 python3 merge_db.py data/hgnc.tsv data/genemap2.txt data/gnomad.v2.1.1.lof_metrics.by_gene.txt data/uniprot.tsv
