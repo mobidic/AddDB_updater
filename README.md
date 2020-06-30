@@ -27,11 +27,11 @@ NB: For OMIM database, you need to ask for access (https://www.omim.org/download
 
 ## Documentation
 
-A Jupyter Notebook to explain who this script work is available in this repository [AddDB_updater.ipynb](https://github.com/mobidic/AddDB_updater/blob/master/AddDB_updater.ipynb)
+A Jupyter Notebook to explain how this script work is available in this repository [AddDB_updater.ipynb](https://github.com/mobidic/AddDB_updater/blob/master/AddDB_updater.ipynb)
 
 -------------------------------------------------------------------------------
 
-**Montpellier Bioinformatique pour le Diagnostique Clinique (MoBiDiC)**
+**Montpellier Bioinformatique pour le Diagnostic Clinique (MoBiDiC)**
 
 *CHU de Montpellier*
 
