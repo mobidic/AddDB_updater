@@ -7,7 +7,7 @@ This is a script that can download cross referenced databases, parse them and cr
 To make it work, git clone this repository and do 
 
 ```bash
-sh updater.sh
+sh updater.sh  https://data.omim.org/downloads/my-Registration-Code/genemap2.txt
 ```
 
 ## Requirements
@@ -23,7 +23,7 @@ sh updater.sh
 - UniProt database (gene function, tissue specificity, involvment in disease)
 - OMIM (phenotype columns of genemap2)
 
-NB: For OMIM database, you need to ask for access and replace the link for genemap2.txt in the updater.sh
+NB: For OMIM database, you need to ask for access (https://www.omim.org/downloads) and give the link for genemap2.txt as argument for the updater.sh
 
 ## Documentation
 
