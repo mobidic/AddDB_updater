@@ -92,6 +92,9 @@ def uniprot(file):
     uniprot_select = uniprot_select.dropna(subset=['Gene_name']) 
     uniprot_select = explode(uniprot_select.assign(Gene_name=uniprot_select['Gene_name'].str.split(';')),lst_cols=['Gene_name'])
     uniprot_select.rename(columns={'Gene_name': '#Gene_name'}, inplace=True)
+    uniprot_select.rename(columns={'Tissue specificity': 'Tissue_specificity(Uniprot)'}, inplace=True)
+    uniprot_select.rename(columns={'Function [CC]': 'Function_description'}, inplace=True)
+    uniprot_select.rename(columns={'Involvement in disease': 'Disease_description'}, inplace=True)
     uniprot_select = uniprot_select.groupby('#Gene_name', as_index=False).min()
     uniprot_select = uniprot_select.sort_values(by=['#Gene_name'])
     uniprot_select = uniprot_select.drop_duplicates()
@@ -105,10 +108,10 @@ def merge_db(hgnc_file,omim_file,gnomad_score_file,uniprot_file):
     omim_list = omim(omim_file)
     gnomad_score_list = gnomad_score(gnomad_score_file)
     uniprot_list = uniprot(uniprot_file)
-    gene_fullxref = hgnc_list.merge(omim_list,on='#Gene_name').merge(gnomad_score_list,on='#Gene_name').merge(uniprot_list,on='#Gene_name')
+    gene_fullxref = hgnc_list.merge(omim_list,on='#Gene_name',how='left').merge(gnomad_score_list,on='#Gene_name',how='left').merge(uniprot_list,on='#Gene_name',how='left')
     gene_fullxref = gene_fullxref.sort_values(by=['#Gene_name'])
     gene_fullxref = gene_fullxref.drop_duplicates()
-    gene_fullxref = gene_fullxref.fillna('')
+    gene_fullxref = gene_fullxref.fillna('.')
     return gene_fullxref
 
 # Run
@@ -119,7 +122,7 @@ filename += '.txt'
 
 gene_fullxref_list = merge_db(hgnc_file,omim_file, gnomad_score_file, uniprot_file)
 gene_fullxref_list = gene_fullxref_list.replace('\+','plus',regex=True)
-gene_fullxref_list.loc[:,['Approved name','Phenotypes','Function [CC]','Involvement in disease','Tissue specificity']] = gene_fullxref_list.loc[:,['Approved name','Phenotypes','Function [CC]','Involvement in disease','Tissue specificity']].replace('-','_',regex=True)
+gene_fullxref_list.loc[:,['Approved name','Phenotypes','Function_description','Disease_description','Tissue_specificity(Uniprot)']] = gene_fullxref_list.loc[:,['Approved name','Phenotypes','Function_description','Disease_description','Tissue_specificity(Uniprot)']].replace('-','_',regex=True)
 gene_fullxref_list.loc[:,['Phenotypes']] = gene_fullxref_list.loc[:,['Phenotypes']].replace('\(','_',regex=True)
 gene_fullxref_list.loc[:,['Phenotypes']] = gene_fullxref_list.loc[:,['Phenotypes']].replace('\)','_',regex=True)
 gene_fullxref_list.columns = gene_fullxref_list.columns.str.replace(' ','_')
