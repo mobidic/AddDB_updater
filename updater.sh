@@ -22,11 +22,11 @@ then
 	mkdir data
 fi 
 
-rm -f data/hgnc.tsv
-rm -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt
-rm -f data/uniprot.tsv
-rm -f data/genemap2.txt
-rm -f data/gene_fullxref.txt
+rm -f data/hgnc.tsv*
+rm -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt*
+rm -f data/uniprot.tsv*
+rm -f data/genemap2.txt*
+rm -f data/gene_fullxref.txt*
 
 ## Download databases
 
@@ -129,7 +129,12 @@ fi
 
 
 # compress temp files
-gzip temp*
+echo "~~~ compress temp files ~~~"
+gzip data/temp*
+gzip data/gnomad.v2.1.1.lof_metrics.by_gene.txt
+gzip data/uniprot.tsv
+gzip data/genemap2.txt
+gzip data/hgnc.tsv
 
 
 exit 0
