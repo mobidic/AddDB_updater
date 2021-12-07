@@ -42,8 +42,8 @@ def gnomad_score(file):
 
 def omim(file):
     omim = pd.read_csv(file, sep='\t',skiprows=3)
-    omim_select = omim[['Approved Symbol','Phenotypes']]
-    omim_select.rename(columns={'Approved Symbol': '#Gene_name'}, inplace=True)
+    omim_select = omim[['Approved Gene Symbol','Phenotypes']]
+    omim_select.rename(columns={'Approved Gene Symbol': '#Gene_name'}, inplace=True)
     omim_select = omim_select.dropna(subset=['#Gene_name']) 
     omim_select = omim_select.sort_values(by=['#Gene_name'])
     omim_select = omim_select.fillna('')
