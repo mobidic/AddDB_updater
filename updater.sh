@@ -34,7 +34,7 @@ rm -f data/gene_fullxref.txt*
 wget -O data/hgnc.tsv 'https://www.genenames.org/cgi-bin/download/custom?col=gd_app_sym&col=gd_app_name&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit'
 
 ### gnomAD constraint scores
-wget -O data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz 'https://storage.googleapis.com/gnomad-public/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz' 
+wget -O data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz 'https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz'
 gunzip data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz
 
 ### UniProt data
