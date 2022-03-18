@@ -46,6 +46,8 @@ wget -P data $1
 ## Merge data into 
 python3 merge_db.py data/hgnc.tsv data/genemap2.txt data/gnomad.v2.1.1.lof_metrics.by_gene.txt data/uniprot.tsv
 
+# check gene_full xref content evolution
+awk -F "\t" 'BEGIN{OMIM=0;field1=0;lines=0;fields=0;emptyFields=0;fieldDiff=""}{if($3 !="." && $3 !=""){OMIM++};if (field1==0){field1=NF;fieldDiff=field1} else if(field1!=NF){fieldDiff=fieldDiff";"NF}; lines++;fields+=NF;for(i=1; i<=NF; i++){if($i == "."){emptyFields ++} }}END{print FILENAME"\nLines= "lines"\nField par ligne= "fieldDiff"\nFields totaux= "fields"\nFields vides= "emptyFields"\nRatio fields totaux sur vides= "fields/emptyFields"\nNb OMIM phenotypes= "OMIM} ' data/gene_fullxref_*.txt > data/CHECKING_gene_fullxref.txt
 
 #test ARG 2 : path to hg19 fasta
 if [ -n "$2" ]; then
@@ -83,6 +85,18 @@ bcftools norm -f $2 -o data/temp_hg19_clinvar_${clindate}_leftAlign.vcf  data/te
 
 # Add header
 sed -i '1i #Chr\tStart\tEnd\tRef\tAlt\tCLNALLELEID\tCLNDN\tCLNDISDB\tCLNREVSTAT\tCLNSIG' data/hg19_clinvar_${clindate}.txt
+
+
+
+# check clinvar content evolution
+awk -F "\t" 'BEGIN{OMIM=0;field1=0;lines=0;fields=0;emptyFields=0;fieldDiff=""}{if($3 !="." && $3!=""){OMIM++};if (field1==0){field1=NF;fieldDiff=field1} else if(field1!=NF){fieldDiff=fieldDiff";"NF}; lines++;fields+=NF;for(i=1; i<=NF; i++){if($i == "." || $i ==""){emptyFields ++} }}END{print FILENAME"\nLines= "lines"\nField par ligne= "fieldDiff"\nFields totaux= "fields"\nFields vides= "emptyFields"\nRatio fields totaux sur vides= "fields/emptyFields"\nNb OMIM phenotypes= "OMIM} ' data/hg19_clinvar_${clindate}.txt > data/CHECKING_hg19_clinvar_${clindate}.txt
+
+# count pathogenicity status in clinvar
+cut -f10 data/hg19_clinvar_${clindate}.txt | sort | uniq -c | sort -k1nr >> data/CHECKING_hg19_clinvar_${clindate}.txt
+
+
+
+
 
 fi
 
@@ -124,13 +138,18 @@ bcftools norm -f $3 -o data/temp_hg38_clinvar_${clindate}_leftAlign.vcf  data/te
 sed -i '1i #Chr\tStart\tEnd\tRef\tAlt\tCLNALLELEID\tCLNDN\tCLNDISDB\tCLNREVSTAT\tCLNSIG' data/hg38_clinvar_${clindate}.txt
 
 
+# check clinvar content evolution
+awk -F "\t" 'BEGIN{OMIM=0;field1=0;lines=0;fields=0;emptyFields=0;fieldDiff=""}{if($3 !="." && $3!=""){OMIM++};if (field1==0){field1=NF;fieldDiff=field1} else if(field1!=NF){fieldDiff=fieldDiff";"NF}; lines++;fields+=NF;for(i=1; i<=NF; i++){if($i == "." || $i ==""){emptyFields ++} }}END{print FILENAME"\nLines= "lines"\nField par ligne= "fieldDiff"\nFields totaux= "fields"\nFields vides= "emptyFields"\nRatio fields totaux sur vides= "fields/emptyFields"\nNb OMIM phenotypes= "OMIM} ' data/hg38_clinvar_${clindate}.txt > data/CHECKING_hg38_clinvar_${clindate}.txt
+
+# count pathogenicity status in clinvar
+cut -f10 data/hg38_clinvar_${clindate}.txt | sort | uniq -c | sort -k1nr >> data/CHECKING_hg38_clinvar_${clindate}.txt
 
 fi
 
 
 # compress temp files
 echo "~~~ compress temp files ~~~"
-gzip data/temp*
+rm data/temp*
 gzip data/gnomad.v2.1.1.lof_metrics.by_gene.txt
 gzip data/uniprot.tsv
 gzip data/genemap2.txt
