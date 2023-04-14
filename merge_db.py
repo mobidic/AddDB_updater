@@ -88,7 +88,7 @@ def explode(df, lst_cols, fill_value='', preserve_index=False):
 def uniprot(file):
     uniprot = pd.read_csv(file, sep='\t')
     uniprot_select = uniprot.iloc[:,3:]
-    uniprot_select.rename(columns={'Gene names  (primary )': 'Gene_name'}, inplace=True)
+    uniprot_select.rename(columns={'Gene Names (primary)': 'Gene_name'}, inplace=True)
     uniprot_select = uniprot_select.dropna(subset=['Gene_name']) 
     uniprot_select = explode(uniprot_select.assign(Gene_name=uniprot_select['Gene_name'].str.split(';')),lst_cols=['Gene_name'])
     uniprot_select.rename(columns={'Gene_name': '#Gene_name'}, inplace=True)
