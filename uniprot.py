@@ -23,7 +23,7 @@ def get_batch(batch_url):
 
 url = "https://rest.uniprot.org/uniprotkb/search?query=organism_id:9606+AND+reviewed:true&fields=accession,reviewed,protein_name,gene_primary,cc_function,cc_tissue_specificity,cc_disease&format=tsv&compressed=false&size=500"
 progress = 0
-with open('uniprot.tsv', 'w') as f:
+with open('data/uniprot.tsv', 'w') as f:
     for batch, total in get_batch(url):
         lines = batch.text.splitlines()
         if not progress:
