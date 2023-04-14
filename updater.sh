@@ -23,10 +23,11 @@ then
 fi 
 
 rm -f data/hgnc.tsv*
-rm -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt*
+rm -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt
 rm -f data/uniprot.tsv*
 rm -f data/genemap2.txt*
 rm -f data/gene_fullxref.txt*
+
 
 ## Download databases
 
@@ -34,17 +35,30 @@ rm -f data/gene_fullxref.txt*
 wget -O data/hgnc.tsv 'https://www.genenames.org/cgi-bin/download/custom?col=gd_app_sym&col=gd_app_name&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit'
 
 ### gnomAD constraint scores
-wget -O data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz 'https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz'
-gunzip data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz
+if [ ! -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt_HGNC_Checked.txt ]
+then
+	wget -O data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz 'https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz'
+	gunzip data/gnomad.v2.1.1.lof_metrics.by_gene.txt.gz
+	#HGNC check/update gene symbols (it take ~ 3 hours)
+	#perl ./update_HGNC_symbols.pl --file data/gnomad.v2.1.1.lof_metrics.by_gene.txt
+fi
 
 ### UniProt data
-wget -O data/uniprot.tsv 'https://www.uniprot.org/uniprot/?query=&fil=organism:9606+AND+reviewed:yes&columns=id,reviewed,protein names,genes(PREFERRED),comment(FUNCTION),comment(TISSUE SPECIFICITY),comment(DISEASE)&format=tab&compress=no'
+python uniprot.py
+#wget -O data/uniprot.tsv 'https://www.uniprot.org/uniprot/?query=&fil=organism:9606+AND+reviewed:yes&columns=id,reviewed,protein names,genes(PREFERRED),comment(FUNCTION),comment(TISSUE SPECIFICITY),comment(DISEASE)&format=tab&compress=no'
 
 ### URL to get OMIM genemap2 according to your personnal Data Account Registration
 wget -P data $1 
 
+
+if [ ! -f data/gnomad.v2.1.1.lof_metrics.by_gene.txt_HGNC_Checked.txt ]
+then
+	echo "The gnomad file doesn't exists  data/gnomad.v2.1.1.lof_metrics.by_gene.txt_HGNC_Checked.txt, it may takes hours to generate!" 
+	exit 1
+fi
+
 ## Merge data into 
-python3 merge_db.py data/hgnc.tsv data/genemap2.txt data/gnomad.v2.1.1.lof_metrics.by_gene.txt data/uniprot.tsv
+python3 merge_db.py data/hgnc.tsv data/genemap2.txt data/gnomad.v2.1.1.lof_metrics.by_gene.txt_HGNC_Checked.txt data/uniprot.tsv
 
 # check gene_full xref content evolution
 awk -F "\t" 'BEGIN{OMIM=0;field1=0;lines=0;fields=0;emptyFields=0;fieldDiff=""}{if($3 !="." && $3 !=""){OMIM++};if (field1==0){field1=NF;fieldDiff=field1} else if(field1!=NF){fieldDiff=fieldDiff";"NF}; lines++;fields+=NF;for(i=1; i<=NF; i++){if($i == "."){emptyFields ++} }}END{print FILENAME"\nLines= "lines"\nField par ligne= "fieldDiff"\nFields totaux= "fields"\nFields vides= "emptyFields"\nRatio fields totaux sur vides= "fields/emptyFields"\nNb OMIM phenotypes= "OMIM} ' data/gene_fullxref_*.txt > data/CHECKING_gene_fullxref.txt
