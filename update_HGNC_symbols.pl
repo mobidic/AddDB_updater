@@ -127,12 +127,12 @@ if($file ne ""){
 			
 			print "\t-->\t".$result->{response}->{docs}[0]{hgnc_id};
 
-			if ($file_List[0] eq $result->{response}->{docs}[0]{symbol}){
+			if ($file_List[$symbolCol] eq $result->{response}->{docs}[0]{symbol}){
 				$unchangedField++;
 			}else{
 				$changedField++;
-				$file_List[0]=$result->{response}->{docs}[0]{symbol};
-				print "\t-->\t".$file_List[0];
+				$file_List[$symbolCol]=$result->{response}->{docs}[0]{symbol};
+				print "\t-->\t".$file_List[$symbolCol];
 			}
 			unless(defined $noHGNC){	
 				push(@file_List,$result->{response}->{docs}[0]{hgnc_id});
