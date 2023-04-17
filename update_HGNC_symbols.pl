@@ -22,7 +22,7 @@ my $version = "search_hgnc version 1.0.0";
 my $file = "";
 my @file_List = "";
 my $file_line = "";
-my $symbolCol = "1";
+my $symbolCol = 1;
 my $noHGNC;
 
 
@@ -38,7 +38,7 @@ my $result = "";
 
 
 GetOptions(     "file=s"                         => \$file,
-			    "symbolColumn"   => \$symbolCol,
+			    "symbolColumn:s"   => \$symbolCol,
 				"noHGNC_ID"		=> \$noHGNC,		 
 				"help"		=> \$help,
 			    "version|v"   => \$version);
@@ -59,6 +59,13 @@ $symbolCol = $symbolCol -1 ;
 
 my $output = $file."_HGNC_Checked.txt";
 
+my $notEmptyField = 0;
+my $header = 0;
+my $emptyField = 0;
+my $notFound = 0;
+my $changedField = 0;
+my $unchangedField = 0;
+
 #file treatment
 if($file ne ""){
 
@@ -72,24 +79,38 @@ if($file ne ""){
 		$file_line = $_;
 		#############################################
 		##############   skip header
+	
 		
 		chomp $file_line;
 		@file_List = split( /\t/, $file_line );
-		
+				
 		if ($file_line=~/^#/){
 			unless(defined $noHGNC){push(@file_List,"hgnc_id")};
 			print OUTPUT join("\t",@file_List)."\n";
+			$header++;
+			print  STDERR "Skip header ... \n" ;
 			next;
 		}
 		if ($file_line=~/^gene/){
 			unless(defined $noHGNC){push(@file_List,"hgnc_id")};
 			print OUTPUT join("\t",@file_List)."\n";
+			$header++;
+			print  STDERR "Skip header ... \n" ;
+			next;
+		}
+
+		############### skip empty field ###########
+		if (! defined $file_List[$symbolCol] || $file_List[$symbolCol] eq ""){
+			unless(defined $noHGNC){push(@file_List,"")};
+			print OUTPUT join("\t",@file_List)."\n";
+			$emptyField++;
 			next;
 		}
 		
-		
+		$notEmptyField++;
+
 		$query=$file_List[$symbolCol];
-		print $query."\n";
+		print "\n".$query;
 
 		$response = $http->get($server.$request_type.$query, {headers => { 'Accept' => 'application/json' }	});
 
@@ -100,8 +121,19 @@ if($file ne ""){
 		if ($result->{response}->{numFound} < 1){
 			unless(defined $noHGNC){push(@file_List,"")};
 			print OUTPUT join("\t",@file_List)."\n";
+			$notFound ++ ;
+			print "\t-->\tnot Found";
 		}else{
-			@file_List[0]=$result->{response}->{docs}[0]{symbol};
+			
+			print "\t-->\t".$result->{response}->{docs}[0]{hgnc_id};
+
+			if ($file_List[0] eq $result->{response}->{docs}[0]{symbol}){
+				$unchangedField++;
+			}else{
+				$changedField++;
+				$file_List[0]=$result->{response}->{docs}[0]{symbol};
+				print "\t-->\t".$file_List[0];
+			}
 			unless(defined $noHGNC){	
 				push(@file_List,$result->{response}->{docs}[0]{hgnc_id});
 				$file_List[-1] =~ s/HGNC://;
@@ -115,6 +147,14 @@ if($file ne ""){
 }
 		
 close(OUTPUT);
+
+print STDERR "Done..............\n";
+print STDERR "Header lines: ".$header."\n";
+print STDERR "Empty symbol field: ".$emptyField."\n";
+print STDERR "Not Empty fields: ".$notEmptyField."\n";
+print STDERR "Symbol not found: ".$notFound."\n";
+print STDERR "Symbol has changed: ".$changedField."\n";
+print STDERR "Symbol is the same: ".$unchangedField."\n";
 
 
 
